@@ -48,7 +48,7 @@ toolkit = SQLDatabaseToolkit(
     llm=model,
 )
 
-system_message = hub.pull('hwchase17/react')
+system_message = hub.pull('langchain-ai/chat-langchain-rephrase')
 
 agent = create_react_agent(
     llm=model,
