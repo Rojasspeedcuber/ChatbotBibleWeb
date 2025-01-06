@@ -43,7 +43,7 @@ model = ChatOpenAI(
 )
 
 
-db = SQLDatabase.from_uri('sqlite:///NTLH.sqlite')
+db = SQLDatabase.from_uri('NTLH.sqlite')
 
 toolkit = SQLDatabaseToolkit(
     db=db,
