@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from langchain import hub
 from decouple import config
+from langchain_openai import ChatOpenAI
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
@@ -38,7 +39,7 @@ st.write('Faça perguntas sobre a Bíblia')
 user_question = st.text_input('O que deseja saber sobre a Bíblia?')
 
 
-model = ChatGroq(
+model = ChatOpenAI(
     model=selected_box,
 )
 
