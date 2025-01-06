@@ -6,10 +6,10 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from langchain_groq import ChatGroq
+
 
 os.environ['GROQ_API_KEY'] = config('GROQ_API_KEY')
-
+os.environ['LANGCHAIN_API_KEY'] = config('LANGCHAIN_API_KEY')
 
 st.set_page_config(
     page_title='Bible AI',
@@ -48,7 +48,7 @@ toolkit = SQLDatabaseToolkit(
     llm=model,
 )
 
-system_message = hub.pull('langchain-ai/chat-langchain-rephrase')
+system_message = hub.pull('hwchase17/react')
 
 agent = create_react_agent(
     llm=model,
