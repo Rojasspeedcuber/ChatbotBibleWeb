@@ -87,7 +87,11 @@ prompt = '''
                 Exemplo: 
                     Usuário pergunta: "Como lidar com a ansiedade à luz da Bíblia?"
                     Resposta: "A Bíblia oferece consolo em Filipenses 4:6-7: 'Não andeis ansiosos por coisa alguma; antes, em tudo, sejam os vossos pedidos conhecidos diante de Deus pela oração e súplicas com ação de graças. E a paz de Deus, que excede todo entendimento, guardará os vossos corações e as vossas mentes em Cristo Jesus.'"
+<<<<<<< HEAD
         A resposta final deve ter uma formatação amigável de vizualização para o usuário.
+=======
+        A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
+>>>>>>> 765334b280558c9db250a8d1d6c3762d6cfb5b36
         Responda sempre em português brasileiro.
 
         Pergunta: {q}
