@@ -43,7 +43,7 @@ model = ChatOpenAI(
 )
 
 
-db = SQLDatabase.from_uri('mysql://root:Plantas12345$@localhost:3306/biblia')
+db = SQLDatabase.from_uri('sqlite:///NTLH.sqlite')
 
 toolkit = SQLDatabaseToolkit(
     db=db,
@@ -65,7 +65,7 @@ agent_executor = AgentExecutor(
 )
 
 prompt = '''
-    Use como base a Bíblia Sagrada em suas principais traduções disponibilizadas no banco de dados.
+    Use como base a Bíblia Sagrada disponibilizada no banco de dados.
         A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
         Responda sempre em português brasileiro.
         Pergunta: {q}
