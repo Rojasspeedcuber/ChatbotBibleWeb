@@ -68,7 +68,6 @@ prompt = '''
     Use como base a Bíblia Sagrada em suas principais traduções disponibilizadas no banco de dados.
         A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
         Responda sempre em português brasileiro.
-
         Pergunta: {q}
     '''
 prompt_template = PromptTemplate.from_template(prompt)
