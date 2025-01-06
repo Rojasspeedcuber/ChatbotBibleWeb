@@ -2,7 +2,7 @@ import os
 import streamlit as st
 from langchain import hub
 from decouple import config
-from langchain_openai import ChatOpenAI
+from langchain_groq import ChatGroq
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
@@ -19,11 +19,10 @@ st.set_page_config(
 st.header('Chatbot Gênesis')
 
 model_options = [
-    'gpt-3.5-turbo',
-    'gpt-4',
-    'gpt-4-turbo',
-    'gpt-4o-mini',
-    'gpt-4o',
+    'llama-3.3-70b-versatile',
+    'llama-3.1-8b-instant',
+    'distil-whisper-large-v3-en',
+    'mixtral-8x7b-32768',
 ]
 
 selected_box = st.sidebar.selectbox(
@@ -38,7 +37,7 @@ st.write('Faça perguntas sobre a Bíblia')
 user_question = st.text_input('O que deseja saber sobre a Bíblia?')
 
 
-model = ChatOpenAI(
+model = ChatGroq(
     model=selected_box,
 )
 
