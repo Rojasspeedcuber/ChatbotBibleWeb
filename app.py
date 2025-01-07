@@ -21,8 +21,6 @@ st.header('Chatbot Gênesis')
 model_options = [
     'llama-3.3-70b-versatile',
     'llama-3.1-8b-instant',
-    'distil-whisper-large-v3-en',
-    'mixtral-8x7b-32768',
 ]
 
 selected_box = st.sidebar.selectbox(
