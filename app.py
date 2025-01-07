@@ -23,9 +23,26 @@ model_options = [
     'llama-3.1-8b-instant',
 ]
 
+bible_options = [
+    'ACF',
+    'ARA',
+    'ARC',
+    'AS21',
+    'KJA',
+    'NAA',
+    'NTLH',
+    'NVI',
+    'NVT',
+]
+
 selected_box = st.sidebar.selectbox(
     label='Selecione o modelo LLM',
     options=model_options,
+)
+
+selected_bible = st.sidebar.selectbox(
+    label='Selecione a versão da base de dados',
+    options=bible_options,
 )
 
 st.sidebar.markdown('### Sobre')
@@ -42,7 +59,7 @@ model = ChatGroq(
 )
 
 
-db = SQLDatabase.from_uri('sqlite:///NTLH.sqlite')
+db = SQLDatabase.from_uri(f'sqlite:///databases\{selected_bible}.sqlite')
 
 toolkit = SQLDatabaseToolkit(
     db=db,
@@ -69,6 +86,7 @@ prompt = '''
     Responda de forma natural, agradável e respeitosa. Seja objetivo nas respostas, com 
     informações claras e diretas. Foque em ser natural e humanizado, como um diálogo comum
     Use como base a Bíblia Sagrada disponibilizada no banco de dados.
+    Sempre use os versículos das base de dados para responder as perguntas.
     A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
     Responda sempre em português brasileiro.
     Pergunta: {q}
