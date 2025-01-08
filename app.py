@@ -86,7 +86,8 @@ prompt = '''
     Responda de forma natural, agradável e respeitosa. Seja objetivo nas respostas, com 
     informações claras e diretas. Foque em ser natural e humanizado, como um diálogo comum
     Use como base a Bíblia Sagrada disponibilizada no banco de dados.
-    Sempre use os versículos das base de dados para responder as perguntas.
+    Sempre use os versículos contidos na base de dados para responder as perguntas.
+    Não mostre os scripts utilizados na busca nos dados da base.
     A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
     Responda sempre em português brasileiro.
     Pergunta: {q}
