@@ -1,4 +1,5 @@
 import os
+from flask import Flask, jsonify
 import streamlit as st
 from decouple import config
 from langchain import hub
@@ -7,6 +8,7 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
+
 
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
@@ -57,9 +59,7 @@ user_question = st.chat_input('O que deseja saber sobre a Bíblia?')
 
 model = ChatOpenAI(
     model=selected_box,
-    max_completion_tokens=1000,
 )
-
 
 db = SQLDatabase.from_uri(
     f'sqlite:///databases/{selected_bible}.db')
@@ -95,7 +95,6 @@ prompt = '''
     Pergunta: {q}
     '''
 prompt_template = PromptTemplate.from_template(prompt)
-
 
 if user_question:
     for message in st.session_state.messages:
