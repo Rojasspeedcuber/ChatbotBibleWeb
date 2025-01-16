@@ -1,15 +1,14 @@
 import os
 import streamlit as st
-from langchain import hub
 from decouple import config
-from langchain_groq import ChatGroq
+from langchain import hub
+from langchain_openai import ChatOpenAI
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 
-
-os.environ['GROQ_API_KEY'] = config('GROQ_API_KEY')
+os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 st.set_page_config(
     page_title='Bible AI',
@@ -19,8 +18,10 @@ st.set_page_config(
 st.header('Chatbot Gênesis')
 
 model_options = [
-    'llama-3.3-70b-versatile',
-    'llama-3.1-8b-instant',
+    'gpt-4',
+    'gpt-4-turbo',
+    'gpt-4o-mini',
+    'gpt-4o',
 ]
 
 bible_options = [
@@ -54,12 +55,14 @@ if 'messages' not in st.session_state:
 
 user_question = st.chat_input('O que deseja saber sobre a Bíblia?')
 
-model = ChatGroq(
+model = ChatOpenAI(
     model=selected_box,
+    max_completion_tokens=1000,
 )
 
 
-db = SQLDatabase.from_uri(f'sqlite:///databases/{selected_bible}.sqlite')
+db = SQLDatabase.from_uri(
+    f'sqlite:///databases/{selected_bible}.db')
 
 toolkit = SQLDatabaseToolkit(
     db=db,
@@ -77,7 +80,7 @@ agent = create_react_agent(
 agent_executor = AgentExecutor(
     agent=agent,
     tools=toolkit.get_tools(),
-    verbose=True,
+    handle_parsing_errors=True,
 )
 
 prompt = '''
@@ -87,7 +90,6 @@ prompt = '''
     informações claras e diretas. Foque em ser natural e humanizado, como um diálogo comum
     Use como base a Bíblia Sagrada disponibilizada no banco de dados.
     Sempre use os versículos contidos na base de dados para responder as perguntas.
-    Não mostre os scripts utilizados na busca nos dados da base.
     A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
     Responda sempre em português brasileiro.
     Pergunta: {q}
