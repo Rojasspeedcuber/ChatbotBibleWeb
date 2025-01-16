@@ -1,5 +1,5 @@
 import os
-from flask import Flask
+from flask import Flask, jsonify
 import streamlit as st
 from decouple import config
 from langchain import hub
@@ -112,6 +112,8 @@ def webhook():
             formatted_prompt = prompt_template.format(q=user_question)
             output = agent_executor.invoke({'input': formatted_prompt})
             st.markdown(output.get('output'))
+
+    return jsonify({'status': 'success'}), 200
 
 
 if __name__ == '__main__':
