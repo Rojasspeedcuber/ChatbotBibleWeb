@@ -12,7 +12,7 @@ from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 app = Flask(__name__)
 
 
-@app.route('/', methods=['POST'])
+@app.route('/', methods=['GET', 'POST', 'DELETE'])
 def webhook():
 
     os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
