@@ -1,5 +1,5 @@
 import os
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 import streamlit as st
 from decouple import config
 from langchain import hub
@@ -114,6 +114,8 @@ def func_app():
             formatted_prompt = prompt_template.format(q=user_question)
             output = agent_executor.invoke({'input': formatted_prompt})
             st.markdown(output.get('output'))
+
+    return jsonify
 
 
 if __name__ == '__main__':
