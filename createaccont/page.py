@@ -1,5 +1,5 @@
 import streamlit as st
-from createaccont.page import login
+from createaccont.service import login
 from api.apimercadopago import gerar_link_pagamento
 
 
