@@ -2,7 +2,8 @@ import mercadopago
 
 
 def gerar_link_pagamento():
-    sdk = mercadopago.SDK("APIM_KEY")
+    sdk = mercadopago.SDK(
+        "APP_USR-6958238556951676-012309-0e24e947de4f94ca0959a404c3af4582-446605533")
 
     request = {
         "items": [
@@ -14,12 +15,9 @@ def gerar_link_pagamento():
                 "unit_price": 40,
             },
         ],
-        "auto_return": "all"
     }
 
-    preference_response = sdk.preference().create(request)
-    preference = preference_response["response"]
-
+    result = sdk.preference().create(request)
+    preference = result["response"]
     link_iniciar_pagamento = preference["init_point"]
-
     return link_iniciar_pagamento
