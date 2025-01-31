@@ -6,7 +6,7 @@ os.environ['APIM_KEY'] = config('APIM_KEY')
 
 
 def gerar_link_pagamento():
-    sdk = mercadopago.SDK("TEST_APIM_KEY")
+    sdk = mercadopago.SDK("APIM_KEY")
 
     request = {
         "items": [
@@ -25,6 +25,7 @@ def gerar_link_pagamento():
 
     preference_response = sdk.preference().create(request)
     preference = preference_response["response"]
+
     link_iniciar_pagamento = preference["init_point"]
 
     return link_iniciar_pagamento
