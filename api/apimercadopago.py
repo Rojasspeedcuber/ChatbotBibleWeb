@@ -18,9 +18,6 @@ def gerar_link_pagamento():
                 "unit_price": 40,
             },
         ],
-        "payment_methods": {
-            "default_payment_method_id": "bank_transfer"
-        }
     }
 
     preference_response = sdk.preference().create(request)
