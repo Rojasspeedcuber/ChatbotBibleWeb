@@ -13,8 +13,8 @@ def create_account():
         label='Senha',
         type='password'
     )
-
-    if st.link_button(label='Criar conta', url=gerar_link_pagamento()):
+    link = gerar_link_pagamento()
+    if st.link_button(label='Criar conta', url=link):
         login(
             username=username,
             email=email,
