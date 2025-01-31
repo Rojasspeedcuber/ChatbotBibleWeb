@@ -2,7 +2,7 @@ from decouple import config
 import mercadopago
 import os
 
-os.environ['TEST_APIM_KEY'] = config('TEST_APIM_KEY')
+os.environ['APIM_KEY'] = config('APIM_KEY')
 
 
 def gerar_link_pagamento():
