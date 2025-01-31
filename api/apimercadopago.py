@@ -1,8 +1,4 @@
-from decouple import config
 import mercadopago
-import os
-
-os.environ['APIM_KEY'] = config('APIM_KEY')
 
 
 def gerar_link_pagamento():
