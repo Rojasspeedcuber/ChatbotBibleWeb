@@ -14,6 +14,7 @@ def gerar_link_pagamento():
                 "unit_price": 40,
             },
         ],
+        "auto_return": "all"
     }
 
     preference_response = sdk.preference().create(request)
