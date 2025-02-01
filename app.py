@@ -7,18 +7,17 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from createaccont.page import create_account
-from login.page import login
+from createaccont.page import show_create_account
+from login.page import show_login
 
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 
 def main():
     if 'token' not in st.session_state:
-        create_account()
-
+        show_create_account()
     elif 'token' in st.session_state:
-        login()
+        show_login()
     else:
         st.set_page_config(
             page_title='Bible AI',
