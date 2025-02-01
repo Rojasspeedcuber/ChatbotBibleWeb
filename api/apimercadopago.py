@@ -17,7 +17,11 @@ def gerar_link_pagamento():
     }
 
     result = sdk.preference().create(request)
+    preference = result.get("response", {})
 
-    link = result['init_point']
+    link_pagamento = preference.get("init_point")
 
-    return link
+    if not link_pagamento:
+        print("❌ Erro: 'init_point' não encontrado. Resposta da API:", preference)
+
+    return link_pagamento

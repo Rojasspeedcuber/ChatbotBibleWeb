@@ -12,5 +12,8 @@ def create_account():
 
     link = gerar_link_pagamento()
 
-    if st.link_button(label='Criar conta', url=link):
-        login(username=username, email=email, password=password)
+    # Verificar se o link é uma string válida
+    if isinstance(link, str) and link.startswith("http"):
+        st.link_button(label="Criar conta", url=link)
+    else:
+        st.error("❌ Erro ao gerar link de pagamento.")
