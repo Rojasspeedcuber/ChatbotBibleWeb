@@ -1,9 +1,13 @@
 import streamlit as st
 from api.service import Auth
+from decouple import config
+import os
+
+os.environ["ACCESS_TOKEN"] = config("ACCESS_TOKEN")
 
 
 def login(username, password):
-    auth_service = Auth()
+    auth_service = Auth("ACCESS_TOKEN")
     response = auth_service.get_token(
         username=username,
         password=password

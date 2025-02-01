@@ -2,20 +2,26 @@ import requests
 
 
 class Auth:
-
-    def __init__(self):
+    def __init__(self, access_token):
         self.__base_url = 'https://api.mercadopago.com'
-        self.__auth_url = f'{self.__base_url}/v1/payments'
+        self.__access_token = access_token
 
-    def get_token(self, username, password):
-        auth_payload = {
-            'username': username,
-            'password': password
+    def check_auth(self):
+        """Verifica se o Access Token é válido"""
+        url = f"{self.__base_url}/v1/payments"
+        headers = {
+            "Authorization": f"Bearer {self.__access_token}",
+            "Content-Type": "application/json"
         }
-        auth_response = requests.post(
-            self.__auth_url,
-            data=auth_payload
-        )
-        if auth_response.status_code == 200:
-            return auth_response.json()
-        return {'error': f'Erro ao autenticar. Status code: {auth_response.status_code}'}
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            return {"status": "Autenticado com sucesso!"}
+        else:
+            return {"error": f"Erro ao autenticar. Código: {response.status_code} - {response.text}"}
+
+
+# Exemplo de uso
+ACCESS_TOKEN = "SEU_ACCESS_TOKEN"  # Substitua pelo token real
+auth = Auth(ACCESS_TOKEN)
+print(auth.check_auth())
