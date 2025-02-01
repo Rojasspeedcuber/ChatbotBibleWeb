@@ -7,7 +7,6 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from createaccont.page import show_create_account
 from login.page import show_login
 
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')

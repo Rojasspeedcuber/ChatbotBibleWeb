@@ -7,9 +7,8 @@ class Auth:
         self.__base_url = 'https://api.mercadopago.com'
         self.__auth_url = f'{self.__base_url}/oauth/token'
 
-    def get_token(self, email, username, password):
+    def get_token(self, username, password):
         auth_payload = {
-            'email': email,
             'username': username,
             'password': password
         }
