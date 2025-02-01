@@ -1,10 +1,8 @@
-
 import mercadopago
 import time
 
 
 def gerar_link_pagamento():
-
     sdk = mercadopago.SDK("ENV_ACCESS_TOKEN")
 
     request_options = mercadopago.config.RequestOptions()
@@ -20,7 +18,17 @@ def gerar_link_pagamento():
 
     payment_response = sdk.payment().create(payment_data, request_options)
     payment = payment_response["response"]
-    transaction = payment["point_of_interaction"]["transaction_data"]
-    link_iniciar_pagamento = transaction["ticket_url"]
+
+    # Novo caminho para acessar transaction_data
+    transaction = payment.get("point_of_interaction",
+                              {}).get("transaction_data", {})
+
+    if not transaction:
+        raise KeyError("transaction_data não encontrado na resposta da API")
+
+    link_iniciar_pagamento = transaction.get("ticket_url")
+
+    if not link_iniciar_pagamento:
+        raise KeyError("ticket_url não encontrado na resposta da API")
 
     return link_iniciar_pagamento
