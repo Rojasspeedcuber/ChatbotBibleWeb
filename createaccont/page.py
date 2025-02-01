@@ -12,8 +12,7 @@ def create_account():
 
     link = gerar_link_pagamento()
 
-    # Adiciona um print para depuração
-    print("Link de pagamento gerado:", link)
+    st.link_button(label='Criar conta', url=link)
 
     if isinstance(link, str) and link.startswith("http"):
         if st.link_button(label='Criar conta', url=link):
