@@ -1,27 +1,29 @@
 import mercadopago
-import time
 
 
 def gerar_link_pagamento():
-    sdk = mercadopago.SDK("ENV_ACCESS_TOKEN")
+    sdk = mercadopago.SDK("APIM_KEY")
 
-    request_options = mercadopago.config.RequestOptions()
-    request_options.custom_headers = {
-        'x-idempotency-key': f'payment-{time.time()}'
+    request = {
+        "items": [
+            {
+                "id": "1",
+                "title": "Chatbot Gênesis WEB",
+                "quantity": 1,
+                "currency_id": "BRL",
+                "unit_price": 40,
+            },
+        ],
     }
 
-    payment_data = {
-        "transaction_amount": 40,
-        "description": "Chatbot Gênesis",
-        "payment_method_id": "pix",
-    }
+    result = sdk.preference().create(request)
+    preference = result.get("response", {})
 
-    payment_response = sdk.payment().create(payment_data, request_options)
-    payment = payment_response["response"]
+    link_pagamento = preference.get("init_point")
 
-    transaction = payment.get("point_of_interaction",
-                              {}).get("transaction_data", {})
+    if not link_pagamento:
+        print("Erro: 'init_point' não encontrado. Resposta da API:", preference)
+        # Retorna um link padrão ao invés de None
+        return "https://www.mercadopago.com.br"
 
-    link_iniciar_pagamento = transaction.get("ticket_url")
-
-    return link_iniciar_pagamento
+    return link_pagamento
