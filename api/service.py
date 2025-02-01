@@ -4,8 +4,8 @@ import requests
 class Auth:
 
     def __init__(self):
-        self.__base_url = 'https://api.mercadopago.com/checkout/preferences'
-        self.__auth_url = f'{self.__base_url}autentication/token/'
+        self.__base_url = 'https://api.mercadopago.com'
+        self.__auth_url = f'{self.__base_url}/oauth/token'
 
     def get_token(self, email, username, password):
         auth_payload = {

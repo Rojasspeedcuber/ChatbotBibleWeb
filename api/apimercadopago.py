@@ -1,8 +1,4 @@
 import mercadopago
-import os
-from decouple import config
-
-os.environ['APIM_KEY'] = config('APIM_KEY')
 
 
 def gerar_link_pagamento():
@@ -21,5 +17,5 @@ def gerar_link_pagamento():
     }
 
     result = sdk.preference().create(request)
-    preference = result["response"]
-    return preference["init_point"]
+    link = result['init_point']
+    return link
