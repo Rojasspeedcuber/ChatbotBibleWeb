@@ -4,12 +4,11 @@ from api.apimercadopago import login_oauth, check_oauth_callback
 from payments.page import verificar_pagamento
 
 
-def login_screen():
+def login_screen(selecao_usuario):
     """Tela de login com autenticação via senha ou Mercado Pago."""
     st.title("Login no Aplicativo")
 
-    menu = st.radio("Escolha uma opção:", [
-                    "Login", "Login com Mercado Pago", "Cadastrar"])
+    menu = selecao_usuario
 
     if menu == "Login":
         st.subheader("Faça login")

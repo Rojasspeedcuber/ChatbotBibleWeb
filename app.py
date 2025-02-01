@@ -18,7 +18,7 @@ st.set_page_config(
 # 🔹 Sidebar - Navegação
 st.sidebar.title("Navegação")
 page = st.sidebar.selectbox(label="Selecione uma opção",
-                            options=["Login", "Login com Mercado Pago"])
+                            options=["Login", "Login com Mercado Pago", "Cadastrar"])
 
 # 🔹 Verificando Login
 usuario = None
@@ -44,7 +44,7 @@ def main():
     # 🔹 Verifica se o usuário está autenticado
     if 'token' not in st.session_state:
         st.warning("Você precisa fazer login para continuar.")
-        login_screen()
+        login_screen(page)
         return
 
     # 🔹 Configuração da interface do Chatbot
