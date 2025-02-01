@@ -12,4 +12,4 @@ def create_account():
 
     link = gerar_link_pagamento()
 
-    st.link_button(label="Criar conta", url=link)
+    st.button(label="Criar conta", url=link)
