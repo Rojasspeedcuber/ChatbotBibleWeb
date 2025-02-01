@@ -13,9 +13,10 @@ def show_create_account():
 
     link = gerar_link_pagamento()
 
-    if st.link_button(label="Criar conta", url=link):
+    if st.button(label="Criar conta"):
         create_account(
             username=username,
             email=email,
             password=password
         )
+        webbrowser.open_new_tab(link)
