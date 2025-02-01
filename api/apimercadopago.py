@@ -2,8 +2,7 @@ import mercadopago
 
 
 def gerar_link_pagamento():
-    sdk = mercadopago.SDK(
-        "APIM_KEY")
+    sdk = mercadopago.SDK("APIM_KEY")
 
     request = {
         "items": [
