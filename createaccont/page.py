@@ -12,6 +12,4 @@ def create_account():
 
     link = gerar_link_pagamento()
 
-    # Verificar se o link é uma string válida
-    if isinstance(link, str) and link.startswith("https"):
-        st.link_button(label="Criar conta", url=link)
+    st.link_button(label="Criar conta", url=link)
