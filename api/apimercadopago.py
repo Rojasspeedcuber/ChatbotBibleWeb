@@ -21,9 +21,4 @@ def gerar_link_pagamento():
 
     link_pagamento = preference.get("init_point")
 
-    if not link_pagamento:
-        print("Erro: 'init_point' não encontrado. Resposta da API:", preference)
-        # Retorna um link padrão ao invés de None
-        return "https://www.mercadopago.com.br"
-
     return link_pagamento
