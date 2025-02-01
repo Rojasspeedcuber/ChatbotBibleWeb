@@ -7,115 +7,123 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from login.page import show_login
+from login.page import login_screen
+from payments.page import verificar_pagamento
+from api.apimercadopago import login_oauth, check_oauth_callback
 
+# Configuração da página principal do Streamlit
+st.set_page_config(
+    page_title="Sistema de Login e Pagamentos", layout="centered")
+
+# 🔹 Sidebar - Navegação
+st.sidebar.title("Navegação")
+page = st.sidebar.radio("Ir para", ["Login", "Login com Mercado Pago"])
+
+# 🔹 Verificando Login
+usuario = None
+if page == "Login":
+    usuario = login_screen()
+elif page == "Login com Mercado Pago":
+    if "code" in st.experimental_get_query_params():
+        usuario = check_oauth_callback()
+    else:
+        login_oauth()
+
+# 🔹 Se o usuário estiver autenticado, verifica o pagamento antes de liberar acesso
+if usuario:
+    verificar_pagamento(usuario)
+
+# 🔹 Configurando API Key do OpenAI para o Chatbot
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 
 def main():
+    """Executa a lógica principal do Chatbot Bíblico."""
+
+    # 🔹 Verifica se o usuário está autenticado
     if 'token' not in st.session_state:
-        show_login()
-    else:
-        st.set_page_config(
-            page_title='Bible AI',
-            page_icon='biblia.png'
-        )
+        login_screen()
+        return
 
-        st.header('Chatbot Gênesis')
+    # 🔹 Configuração da interface do Chatbot
+    st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
+    st.header('Chatbot Gênesis')
 
-        model_options = [
-            'gpt-4',
-            'gpt-4-turbo',
-            'gpt-4o-mini',
-            'gpt-4o',
-        ]
+    # 🔹 Modelos disponíveis para o Chatbot
+    model_options = ['gpt-4', 'gpt-4-turbo', 'gpt-4o-mini', 'gpt-4o']
+    bible_options = ['ACF', 'ARA', 'ARC', 'AS21',
+                     'KJA', 'NAA', 'NTLH', 'NVI', 'NVT']
 
-        bible_options = [
-            'ACF',
-            'ARA',
-            'ARC',
-            'AS21',
-            'KJA',
-            'NAA',
-            'NTLH',
-            'NVI',
-            'NVT',
-        ]
+    selected_box = st.sidebar.selectbox(
+        label='Selecione o modelo LLM', options=model_options)
+    selected_bible = st.sidebar.selectbox(
+        label='Selecione a versão da base de dados', options=bible_options)
 
-        selected_box = st.sidebar.selectbox(
-            label='Selecione o modelo LLM',
-            options=model_options,
-        )
+    # 🔹 Informações sobre o Chatbot
+    st.sidebar.markdown("### Sobre")
+    st.sidebar.markdown(
+        "Sou o ChatBot Gênesis. Fui criado pela inspiração de Deus na vida de um estudante de Ciência da Computação. "
+        "Utilizo Inteligência Artificial para ajudá-lo a conhecer os ensinamentos bíblicos."
+    )
 
-        selected_bible = st.sidebar.selectbox(
-            label='Selecione a versão da base de dados',
-            options=bible_options,
-        )
+    st.write("Faça perguntas sobre a Bíblia")
 
-        st.sidebar.markdown('### Sobre')
-        st.sidebar.markdown(
-            'Sou o ChatBot Gênesis. Fui criado pela inspiração de Deus na vida de um estudante de Ciência da Computação. Utilizo Inteligência Artificial para ajudá-lo a conhecer os ensinamentos bíblicos.')
-        st.write('Faça perguntas sobre a Bíblia')
+    # 🔹 Histórico de mensagens
+    if 'messages' not in st.session_state:
+        st.session_state['messages'] = []
 
-        if 'messages' not in st.session_state:
-            st.session_state['messages'] = []
+    # 🔹 Input do usuário
+    user_question = st.chat_input('O que deseja saber sobre a Bíblia?')
 
-        user_question = st.chat_input('O que deseja saber sobre a Bíblia?')
+    # 🔹 Configuração do modelo e banco de dados
+    model = ChatOpenAI(model=selected_box,
+                       max_completion_tokens=1000, streaming=True)
 
-        model = ChatOpenAI(
-            model=selected_box,
-            max_completion_tokens=1000,
-            streaming=True
-        )
+    try:
+        db = SQLDatabase.from_uri(f'sqlite:///databases/{selected_bible}.db')
+    except Exception as e:
+        st.error(f"Erro ao conectar ao banco de dados: {e}")
+        return
 
-        db = SQLDatabase.from_uri(
-            f'sqlite:///databases/{selected_bible}.db')
+    toolkit = SQLDatabaseToolkit(db=db, llm=model)
 
-        toolkit = SQLDatabaseToolkit(
-            db=db,
-            llm=model,
-        )
+    system_message = hub.pull('hwchase17/react')
 
-        system_message = hub.pull('hwchase17/react')
+    agent = create_react_agent(
+        llm=model, tools=toolkit.get_tools(), prompt=system_message)
+    agent_executor = AgentExecutor(
+        agent=agent, tools=toolkit.get_tools(), handle_parsing_errors=True)
 
-        agent = create_react_agent(
-            llm=model,
-            tools=toolkit.get_tools(),
-            prompt=system_message,
-        )
+    # 🔹 Template de prompt para o Chatbot
+    prompt = """
+        Você é um chatbot especializado na Bíblia Sagrada, capaz de responder perguntas sobre seu conteúdo, 
+        interpretação e contexto histórico, cultural e espiritual.
+        Seu objetivo é fornecer respostas claras, precisas e baseadas nas escrituras, respeitando todas as tradições cristãs.
+        Responda de forma natural, agradável e respeitosa. Seja objetivo nas respostas, com 
+        informações claras e diretas. Foque em ser natural e humanizado, como um diálogo comum.
+        Use como base a Bíblia Sagrada disponibilizada no banco de dados.
+        Sempre use os versículos contidos na base de dados para responder as perguntas.
+        A resposta final deve ter uma formatação amigável (markdown) para visualização do usuário.
+        Responda sempre em português brasileiro.
+        Pergunta: {q}
+    """
+    prompt_template = PromptTemplate.from_template(prompt)
 
-        agent_executor = AgentExecutor(
-            agent=agent,
-            tools=toolkit.get_tools(),
-            handle_parsing_errors=True,
-        )
+    # 🔹 Se houver pergunta, processa a resposta
+    if user_question:
+        for message in st.session_state.messages:
+            st.chat_message(message.get('role')).write(message.get('content'))
 
-        prompt = '''
-            Você é um chatbot especializado na Bíblia Sagrada, capaz de responder perguntas sobre seu conteúdo, interpretação e contexto histórico, cultural e espiritual.
-            Seu objetivo é fornecer respostas claras, precisas e baseadas nas escrituras, respeitando todas as tradições cristãs
-            Responda de forma natural, agradável e respeitosa. Seja objetivo nas respostas, com 
-            informações claras e diretas. Foque em ser natural e humanizado, como um diálogo comum
-            Use como base a Bíblia Sagrada disponibilizada no banco de dados.
-            Sempre use os versículos contidos na base de dados para responder as perguntas.
-            A resposta final deve ter uma formatação amigável(markdown) de vizualização para o usuário.
-            Responda sempre em português brasileiro.
-            Pergunta: {q}
-            '''
-        prompt_template = PromptTemplate.from_template(prompt)
+        st.chat_message('user').write(user_question)
+        st.session_state.messages.append(
+            {'role': 'user', 'content': user_question})
 
-        if user_question:
-            for message in st.session_state.messages:
-                st.chat_message(message.get('role')).write(
-                    message.get('content'))
-
-            st.chat_message('user').write(user_question)
-            st.session_state.messages.append(
-                {'role': 'user', 'content': user_question})
-            with st.spinner('Buscando resposta...'):
-                formatted_prompt = prompt_template.format(q=user_question)
-                output = agent_executor.invoke({'input': formatted_prompt})
-                st.markdown(output.get('output'))
+        with st.spinner('Buscando resposta...'):
+            formatted_prompt = prompt_template.format(q=user_question)
+            output = agent_executor.invoke({'input': formatted_prompt})
+            st.markdown(output.get('output'))
 
 
+# 🔹 Executando o aplicativo
 if __name__ == '__main__':
     main()
