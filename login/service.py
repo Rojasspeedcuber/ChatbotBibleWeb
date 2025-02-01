@@ -6,12 +6,9 @@ import os
 os.environ["ACCESS_TOKEN"] = config("ACCESS_TOKEN")
 
 
-def login(username, password):
+def login():
     auth_service = Auth("ACCESS_TOKEN")
-    response = auth_service.check_auth(
-        username=username,
-        password=password
-    )
+    response = auth_service.check_auth()
     if response.get('error'):
         st.error(f'Falha ao realizar login: {response.get('error')}')
     else:
