@@ -8,7 +8,7 @@ os.environ["ACCESS_TOKEN"] = config("ACCESS_TOKEN")
 
 def login(username, password):
     auth_service = Auth("ACCESS_TOKEN")
-    response = auth_service.get_token(
+    response = auth_service.check_auth(
         username=username,
         password=password
     )

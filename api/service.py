@@ -19,9 +19,3 @@ class Auth:
             return {"status": "Autenticado com sucesso!"}
         else:
             return {"error": f"Erro ao autenticar. Código: {response.status_code} - {response.text}"}
-
-
-# Exemplo de uso
-ACCESS_TOKEN = "SEU_ACCESS_TOKEN"  # Substitua pelo token real
-auth = Auth(ACCESS_TOKEN)
-print(auth.check_auth())
