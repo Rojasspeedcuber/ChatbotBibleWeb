@@ -15,6 +15,11 @@ from api.apimercadopago import login_oauth, check_oauth_callback
 st.set_page_config(
     page_title="Sistema de Login e Pagamentos", layout="centered")
 
+# 🔹 Sidebar - Navegação
+st.sidebar.title("Navegação")
+page = st.sidebar.selectbox(
+    ["Login", "Login com Mercado Pago"])
+
 # 🔹 Verificando Login
 usuario = None
 if page == "Login":
