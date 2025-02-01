@@ -17,5 +17,6 @@ def gerar_link_pagamento():
     }
 
     result = sdk.preference().create(request)
-    link = result['init_point']
+    preference = result['response']
+    link = preference['init_point']
     return link
