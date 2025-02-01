@@ -15,9 +15,6 @@ def show_login():
     )
 
     if st.button('Login'):
-        login(
-            username=username,
-            password=password
-        )
+        login()
         link = gerar_link_pagamento()
         webbrowser.open_new_tab(link)
