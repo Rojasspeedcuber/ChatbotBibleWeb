@@ -18,7 +18,7 @@ st.set_page_config(
 # 🔹 Sidebar - Navegação
 st.sidebar.title("Navegação")
 page = st.sidebar.radio(
-    "Ir para", ["Login", "Login com Mercado Pago"], key="menu_unique")
+    "Ir para", ["Login", "Login com Mercado Pago"], key="login")
 
 # 🔹 Verificando Login
 usuario = None
