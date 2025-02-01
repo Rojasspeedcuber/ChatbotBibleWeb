@@ -20,6 +20,7 @@ def gerar_link_pagamento():
 
     payment_response = sdk.payment().create(payment_data, request_options)
     payment = payment_response["response"]
-    link_iniciar_pagamento = payment["ticket_url"]
+    transaction = payment["transaction_data"]
+    link_iniciar_pagamento = transaction["ticket_url"]
 
     return link_iniciar_pagamento
