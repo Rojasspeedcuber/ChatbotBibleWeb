@@ -17,8 +17,8 @@ st.set_page_config(
 
 # 🔹 Sidebar - Navegação
 st.sidebar.title("Navegação")
-page = st.sidebar.selectbox(
-    ["Login", "Login com Mercado Pago"])
+page = st.sidebar.selectbox(label="Selecione uma opção",
+                            options=["Login", "Login com Mercado Pago"])
 
 # 🔹 Verificando Login
 usuario = None
