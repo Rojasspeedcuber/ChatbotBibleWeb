@@ -9,7 +9,7 @@ def login_screen():
     st.title("Login no Aplicativo")
 
     menu = st.radio("Escolha uma opção:", [
-                    "Login", "Login com Mercado Pago", "Cadastrar"], key="login")
+                    "Login", "Login com Mercado Pago", "Cadastrar"], key="unique_login_radio_key")
 
     if menu == "Login":
         st.subheader("Faça login")
