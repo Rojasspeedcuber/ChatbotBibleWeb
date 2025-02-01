@@ -23,7 +23,7 @@ page = st.sidebar.selectbox(label="Selecione uma opção",
 # 🔹 Verificando Login
 usuario = None
 if page == "Login":
-    usuario = login_screen()
+    usuario = login_screen(page)
 elif page == "Login com Mercado Pago":
     if "code" in st.experimental_get_query_params():
         usuario = check_oauth_callback()
