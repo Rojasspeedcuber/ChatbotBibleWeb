@@ -12,8 +12,5 @@ def create_account():
 
     link = gerar_link_pagamento()
 
-    st.link_button(label='Criar conta', url=link)
-
-    if isinstance(link, str) and link.startswith("http"):
-        if st.link_button(label='Criar conta', url=link):
-            login(username=username, email=email, password=password)
+    if st.link_button(label='Criar conta', url=link):
+        login(username=username, email=email, password=password)
