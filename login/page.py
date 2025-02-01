@@ -44,3 +44,5 @@ def login_screen(selecao_usuario):
                 st.success("Usuário cadastrado com sucesso! Agora faça login.")
             else:
                 st.warning("Preencha todos os campos!")
+
+    return None
