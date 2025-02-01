@@ -15,8 +15,6 @@ os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 def main():
     if 'token' not in st.session_state:
-        show_create_account()
-    elif 'token' in st.session_state:
         show_login()
     else:
         st.set_page_config(
