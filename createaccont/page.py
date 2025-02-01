@@ -15,8 +15,5 @@ def create_account():
     # Adiciona um print para depuração
     print("Link de pagamento gerado:", link)
 
-    if isinstance(link, str) and link.startswith("http"):
-        if st.link_button(label='Criar conta', url=link):
-            login(username=username, email=email, password=password)
-    else:
-        st.error("Erro ao gerar link de pagamento. Tente novamente.")
+    if st.link_button(label='Criar conta', url=link):
+        login(username=username, email=email, password=password)
