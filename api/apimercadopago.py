@@ -7,7 +7,7 @@ from payments.page import verificar_pagamento
 # Configuração das credenciais do Mercado Pago
 CLIENT_ID = config('CLIENT_ID')
 CLIENT_SECRET = config('CLIENT_SECRET')
-REDIRECT_URI = "http://localhost:8501"
+REDIRECT_URI = "https://chatbotgenesisweb.streamlit.app/"
 
 AUTH_URL = "https://auth.mercadopago.com/authorization"
 TOKEN_URL = "https://api.mercadopago.com/oauth/token"
