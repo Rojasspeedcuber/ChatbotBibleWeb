@@ -17,7 +17,7 @@ DATABASE_PATH = "databases/usuarios.sqlite"
 
 def login_oauth():
     """Redireciona o usuário para o login do Mercado Pago."""
-    url = f"{AUTH_URL}?response_type=code&client_id={'CLIENT_ID'}&redirect_uri={REDIRECT_URI}"
+    url = f"{AUTH_URL}?response_type=code&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}"
     st.markdown(f"[🔑 Login com Mercado Pago]({url})", unsafe_allow_html=True)
 
 
