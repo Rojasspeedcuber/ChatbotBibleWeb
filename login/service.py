@@ -48,8 +48,12 @@ def verificar_login(username, senha):
     """Verifica se o login é válido."""
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
+
+    # Busca a senha criptografada do usuário no banco de dados
     cursor.execute(
-        "SELECT senha FROM usuarios WHERE username = ?", (username))
+        "SELECT senha FROM usuarios WHERE username = ?", (username,))
     user = cursor.fetchone()
     conn.close()
+
+    # Verifica se o usuário existe e se a senha informada bate com o hash armazenado
     return user is not None and user[0] == hash_senha(senha)
