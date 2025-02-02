@@ -1,7 +1,7 @@
 import sqlite3
 import hashlib
 
-DATABASE_PATH = "databases/usuarios.sqlite"
+DATABASE_PATH = "databases/login.sqlite"
 
 
 def criar_db():
@@ -45,5 +45,4 @@ def verificar_login(username, senha):
     return user and user[0] == hash_senha(senha)
 
 
-# Criar o banco na primeira execução
 criar_db()
