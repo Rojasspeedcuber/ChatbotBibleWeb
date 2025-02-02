@@ -44,7 +44,6 @@ def main():
     # 🔹 Verifica se o usuário está autenticado
     if 'token' not in st.session_state:
         st.warning("Você precisa fazer login para continuar.")
-        login_screen(page)
         return
 
     # 🔹 Configuração da interface do Chatbot
