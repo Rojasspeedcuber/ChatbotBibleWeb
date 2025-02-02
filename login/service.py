@@ -28,8 +28,8 @@ def cadastrar_usuario(username, senha):
     """Cadastra um novo usuário."""
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute("INSERT INTO usuarios (username, senha) VALUES (?, ?)",
-                   (username, hash_senha(senha)))
+    cursor.execute(
+        "INSERT INTO usuarios (username, senha) VALUES (?, ?)", (username, senha))
     conn.commit()
     conn.close()
 
