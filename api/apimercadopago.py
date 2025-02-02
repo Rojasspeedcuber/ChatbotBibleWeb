@@ -23,7 +23,7 @@ def login_oauth():
 
 def check_oauth_callback():
     """Verifica se há um código de autorização e troca por um token de acesso."""
-    params = st.experimental_get_query_params()
+    params = st.st.query_params()
 
     if "code" in params:
         auth_code = params["code"][0]
