@@ -1,6 +1,5 @@
 import streamlit as st
 from login.service import verificar_login, cadastrar_usuario
-from api.apimercadopago import login_oauth, check_oauth_callback
 from payments.page import verificar_pagamento
 
 
