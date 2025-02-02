@@ -26,7 +26,7 @@ def login_screen(selecao_usuario):
     elif menu == "Login com Mercado Pago":
         st.subheader("Autenticação via Mercado Pago")
 
-        if "code" in st.st.query_params():
+        if "code" in st.query_params():
             usuario = check_oauth_callback()
             if usuario:
                 st.success(f"Bem-vindo, {usuario}!")
