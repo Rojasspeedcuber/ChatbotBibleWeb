@@ -19,9 +19,6 @@ def criar_db():
     conn.close()
 
 
-criar_db()
-
-
 def hash_senha(senha):
     """Retorna o hash SHA-256 da senha."""
     return hashlib.sha256(senha.encode()).hexdigest()

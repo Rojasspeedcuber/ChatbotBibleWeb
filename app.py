@@ -9,6 +9,9 @@ from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from login.page import login_screen
 from payments.page import verificar_pagamento
+from login.service import criar_db
+
+criar_db()
 
 # Configuração da página principal do Streamlit
 st.set_page_config(
