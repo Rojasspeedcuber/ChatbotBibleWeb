@@ -25,7 +25,7 @@ usuario = None
 if page == "Login":
     usuario = login_screen(page)
 elif page == "Login com Mercado Pago":
-    if "code" in st.query_params():
+    if "code" in st.query_params:
         usuario = check_oauth_callback()
     else:
         login_oauth()
