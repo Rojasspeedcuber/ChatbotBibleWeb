@@ -19,6 +19,9 @@ def criar_db():
     conn.close()
 
 
+criar_db()
+
+
 def hash_senha(senha):
     """Retorna o hash SHA-256 da senha."""
     return hashlib.sha256(senha.encode()).hexdigest()
@@ -43,6 +46,3 @@ def verificar_login(username, senha):
     user = cursor.fetchone()
     conn.close()
     return user and user[0] == hash_senha(senha)
-
-
-criar_db()
