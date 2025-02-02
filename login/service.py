@@ -1,3 +1,4 @@
+import streamlit as st
 import sqlite3
 import hashlib
 
@@ -25,13 +26,22 @@ def hash_senha(senha):
 
 
 def cadastrar_usuario(username, senha):
-    """Cadastra um novo usuário."""
+    """Cadastra um novo usuário com a senha criptografada."""
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
-    cursor.execute(
-        "INSERT INTO usuarios (username, senha) VALUES (?, ?)", (username, senha))
-    conn.commit()
-    conn.close()
+
+    # Gera o hash da senha antes de armazenar
+    senha_hash = hash_senha(senha)
+
+    try:
+        cursor.execute(
+            "INSERT INTO usuarios (username, senha) VALUES (?, ?)", (username, senha_hash))
+        conn.commit()
+        st.success("Usuário cadastrado com sucesso! Agora faça login.")
+    except sqlite3.IntegrityError:
+        st.error("Erro: Nome de usuário já existe!")
+    finally:
+        conn.close()
 
 
 def verificar_login(username, senha):
