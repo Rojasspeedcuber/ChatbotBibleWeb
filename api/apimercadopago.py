@@ -2,11 +2,12 @@ import streamlit as st
 import requests
 import sqlite3
 import os
+from decouple import config
 from payments.page import verificar_pagamento
 
 # Configuração das credenciais do Mercado Pago
-CLIENT_ID = "SUA_CLIENT_ID"
-CLIENT_SECRET = "SEU_CLIENT_SECRET"
+os.environ['CLIENT_ID'] = config('CLIENT_ID')
+os.environ['CLIENT_SECRET'] = config('CLIENT_SECRET')
 REDIRECT_URI = "http://localhost:8501"
 
 AUTH_URL = "https://auth.mercadopago.com/authorization"
@@ -17,7 +18,7 @@ DATABASE_PATH = "databases/usuarios.sqlite"
 
 def login_oauth():
     """Redireciona o usuário para o login do Mercado Pago."""
-    url = f"{AUTH_URL}?response_type=code&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}"
+    url = f"{AUTH_URL}?response_type=code&client_id={'CLIENT_ID'}&redirect_uri={REDIRECT_URI}"
     st.markdown(f"[🔑 Login com Mercado Pago]({url})", unsafe_allow_html=True)
 
 
@@ -44,8 +45,8 @@ def check_oauth_callback():
 def get_access_token(auth_code):
     """Troca o código de autorização por um access token."""
     payload = {
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
+        "client_id": 'CLIENT_ID',
+        "client_secret": 'CLIENT_SECRET',
         "code": auth_code,
         "grant_type": "authorization_code",
         "redirect_uri": REDIRECT_URI
