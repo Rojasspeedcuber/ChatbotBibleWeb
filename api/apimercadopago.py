@@ -45,8 +45,8 @@ def check_oauth_callback():
 def get_access_token(auth_code):
     """Troca o código de autorização por um access token."""
     payload = {
-        "client_id": ['CLIENT_ID'],
-        "client_secret": ['CLIENT_SECRET'],
+        "client_id": ('CLIENT_ID'),
+        "client_secret": ('CLIENT_SECRET'),
         "code": auth_code,
         "grant_type": "authorization_code",
         "redirect_uri": REDIRECT_URI
