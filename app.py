@@ -29,6 +29,8 @@ elif page == "Login com Mercado Pago":
         usuario = check_oauth_callback()
     else:
         login_oauth()
+elif page == "Cadastrar":
+    usuario = login_screen(page)
 
 # 🔹 Se o usuário estiver autenticado, verifica o pagamento antes de liberar acesso
 if usuario:
