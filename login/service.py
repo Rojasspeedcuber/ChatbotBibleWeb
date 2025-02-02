@@ -39,7 +39,7 @@ def verificar_login(username, senha):
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
     cursor.execute(
-        "SELECT senha FROM usuarios WHERE username = ?", (username,))
+        "SELECT senha FROM usuarios WHERE username = ?", (username, senha))
     user = cursor.fetchone()
     conn.close()
     return user and user[0] == hash_senha(senha)
