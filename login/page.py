@@ -23,16 +23,6 @@ def login_screen(selecao_usuario):
             else:
                 st.error("Usuário ou senha incorretos!")
 
-    elif menu == "Login com Mercado Pago":
-        st.subheader("Autenticação via Mercado Pago")
-
-        if "code" in st.query_params():
-            usuario = check_oauth_callback()
-            if usuario:
-                st.success(f"Bem-vindo, {usuario}!")
-        else:
-            login_oauth()
-
     elif menu == "Cadastrar":
         st.subheader("Crie uma conta")
         new_username = st.text_input("Novo usuário")

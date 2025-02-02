@@ -15,32 +15,6 @@ TOKEN_URL = "https://api.mercadopago.com/oauth/token"
 DATABASE_PATH = "databases/usuarios.sqlite"
 
 
-def login_oauth():
-    """Redireciona o usuário para o login do Mercado Pago."""
-    url = f"{AUTH_URL}?response_type=code&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}"
-    st.markdown(f"[🔑 Login com Mercado Pago]({url})", unsafe_allow_html=True)
-
-
-def check_oauth_callback():
-    """Verifica se há um código de autorização e troca por um token de acesso."""
-    params = st.query_params()
-
-    if "code" in params:
-        auth_code = params["code"][0]
-        access_token = get_access_token(auth_code)
-
-        if access_token:
-            usuario = get_user_info(access_token)
-            if usuario:
-                # Verifica pagamento antes de liberar acesso
-                verificar_pagamento(usuario)
-                return usuario
-    else:
-        st.error("Erro ao autenticar com Mercado Pago.")
-
-    return None
-
-
 def get_access_token(auth_code):
     """Troca o código de autorização por um access token."""
     payload = {
@@ -54,7 +28,7 @@ def get_access_token(auth_code):
     response = requests.post(TOKEN_URL, data=payload)
 
     if response.status_code == 200:
-        return response.json().get("access_token")
+        return response.json().get('access_token')
 
     st.error("Erro ao obter access token.")
     return None

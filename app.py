@@ -9,7 +9,6 @@ from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from login.page import login_screen
 from payments.page import verificar_pagamento
-from api.apimercadopago import login_oauth, check_oauth_callback
 
 # Configuração da página principal do Streamlit
 st.set_page_config(
@@ -18,17 +17,12 @@ st.set_page_config(
 # 🔹 Sidebar - Navegação
 st.sidebar.title("Navegação")
 page = st.sidebar.selectbox(label="Selecione uma opção",
-                            options=["Login", "Login com Mercado Pago", "Cadastrar"])
+                            options=["Login", "Cadastrar"])
 
 # 🔹 Verificando Login
 usuario = None
 if page == "Login":
     usuario = login_screen(page)
-elif page == "Login com Mercado Pago":
-    if "code" in st.query_params:
-        usuario = check_oauth_callback()
-    else:
-        login_oauth()
 elif page == "Cadastrar":
     usuario = login_screen(page)
 
