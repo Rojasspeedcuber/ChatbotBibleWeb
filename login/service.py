@@ -56,4 +56,4 @@ def verificar_login(username, senha):
     conn.close()
 
     # Verifica se o usuário existe e se a senha informada bate com o hash armazenado
-    return user is not None and user[0] == hash_senha(senha)
+    return user is not None and user[1] == hash_senha(senha)
