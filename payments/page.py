@@ -1,6 +1,5 @@
 import streamlit as st
 from payments.service import criar_pagamento_checkout_pro
-from decouple import config
 
 
 import streamlit as st

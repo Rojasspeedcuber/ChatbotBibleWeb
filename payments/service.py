@@ -1,6 +1,4 @@
-import mercadopago
 import requests
-import streamlit as st
 from decouple import config
 
 ACCESS_TOKEN = config('ACCESS_TOKEN')
