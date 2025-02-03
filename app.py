@@ -7,31 +7,14 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from login.page import login_screen
 from payments.page import verificar_pagamento
-from login.service import criar_db
-
-criar_db()
 
 # Configuração da página principal do Streamlit
 st.set_page_config(
-    page_title="Sistema de Login e Pagamentos", layout="centered")
+    page_title="Sistema de Pagamentos", layout="centered")
 
-# 🔹 Sidebar - Navegação
-st.sidebar.title("Navegação")
-page = st.sidebar.selectbox(label="Selecione uma opção",
-                            options=["Login", "Cadastrar"])
-
-# 🔹 Verificando Login
-usuario = None
-if page == "Login":
-    usuario = login_screen(page)
-elif page == "Cadastrar":
-    usuario = login_screen(page)
-
-# 🔹 Se o usuário estiver autenticado, verifica o pagamento antes de liberar acesso
-if usuario:
-    verificar_pagamento(usuario)
+# 🔹 Verificando Pagamento
+usuario = verificar_pagamento()
 
 # 🔹 Configurando API Key do OpenAI para o Chatbot
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
@@ -39,11 +22,6 @@ os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 def main():
     """Executa a lógica principal do Chatbot Bíblico."""
-
-    # 🔹 Verifica se o usuário está autenticado
-    if 'token' not in st.session_state:
-        st.warning("Você precisa fazer login para continuar.")
-        return
 
     # 🔹 Configuração da interface do Chatbot
     st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
