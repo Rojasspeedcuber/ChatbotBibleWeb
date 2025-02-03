@@ -1,8 +1,8 @@
+import mercadopago
 import streamlit as st
 import requests
 from decouple import config
 
-# Configuração das credenciais do Mercado Pago
 CLIENT_ID = config('CLIENT_ID')
 CLIENT_SECRET = config('CLIENT_SECRET')
 REDIRECT_URI = "https://chatbotgenesisweb.streamlit.app/"

@@ -7,7 +7,7 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from payments.page import verificar_pagamento
+from payments.page import exibir_link_pagamento
 
 
 # 🔹 Configurando API Key do OpenAI para o Chatbot
@@ -16,7 +16,7 @@ os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 def main():
     """Executa a lógica principal do Chatbot Bíblico."""
-    verificar_pagamento()
+    exibir_link_pagamento()
     # 🔹 Configuração da interface do Chatbot
     st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
     st.header('Chatbot Gênesis')

@@ -1,21 +1,17 @@
 import requests
-# Importando a função para obter o access_token
-from api.apimercadopago import get_access_token
 import streamlit as st
+from decouple import config
+
+ACCESS_TOKEN = config('ACCESS_TOKEN')
 
 
-def criar_pagamento_checkout_pro(auth_code):
-    """Cria uma preferência de pagamento no Mercado Pago com Checkout Pro."""
-    # Obtém o token de acesso usando o código de autorização
-    access_token = get_access_token(auth_code)
-
-    if not access_token:
-        st.error("Não foi possível obter o token de acesso.")
-        return None
+def criar_pagamento_checkout_pro():
+    """Cria uma preferência de pagamento no Mercado Pago com Checkout Pro usando um token fixo."""
 
     url = "https://api.mercadopago.com/checkout/preferences"
+
     headers = {
-        "Authorization": f"Bearer {access_token}",
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
 
@@ -28,6 +24,13 @@ def criar_pagamento_checkout_pro(auth_code):
                 "currency_id": "BRL"
             }
         ],
+        "back_urls": {
+            # URL para quando o pagamento for bem-sucedido
+            "success": "https://www.suaurl.com/sucesso",
+            "failure": "https://www.suaurl.com/erro",  # URL para quando o pagamento falhar
+            # URL para quando o pagamento estiver pendente
+            "pending": "https://www.suaurl.com/pendente"
+        },
         "auto_return": "approved",  # Redireciona automaticamente após o pagamento ser aprovado
         "payment_methods": {
             "excluded_payment_types": [
