@@ -2,7 +2,6 @@ import requests
 import os
 from decouple import config
 
-os.environ['ACCESS_TOKEN'] = config('ACCESS_TOKEN')
 
 DATABASE_PATH = "databases/usuarios.sqlite"
 
@@ -11,7 +10,7 @@ def criar_pagamento():
     """Cria um link de pagamento no Mercado Pago."""
     url = "https://api.mercadopago.com/v1/payments"
     headers = {
-        "Authorization": f"Bearer {os.environ['ACCESS_TOKEN']}",
+        "Authorization": f"Bearer {config('ACCESS_TOKEN')}",
         "Content-Type": "application/json"
     }
     payload = {
