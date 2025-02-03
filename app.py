@@ -1,5 +1,6 @@
 import os
 import streamlit as st
+import mercadopago
 from decouple import config
 from langchain import hub
 from langchain_openai import ChatOpenAI
@@ -8,7 +9,7 @@ from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from payments.page import exibir_link_pagamento
-from payments.service import verificar_pagamento
+from payments.service import ACCESS_TOKEN
 
 st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
 
@@ -24,6 +25,22 @@ def exibir_interface_pagamento():
     st.write("Por favor, complete o pagamento para continuar.")
     # Exibe o link para o pagamento
     exibir_link_pagamento()
+
+
+def verificar_pagamento(preference_id):
+    # Configura a chave de acesso do Mercado Pago
+    # A chave de acesso do Mercado Pago
+    mp = mercadopago.SDK(ACCESS_TOKEN)
+
+    # Verifica o status do pagamento utilizando o ID da preferência
+    preference = mp.payment().get(preference_id)
+
+    # O status de pagamento pode ser "approved", "pending", "rejected", etc.
+    if preference['response']['status'] == 'approved':
+        return True  # Pagamento aprovado
+    else:
+        return False  # Pagamento não aprovado
+
 
 # Função principal para o chatbot bíblico
 
