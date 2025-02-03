@@ -1,6 +1,7 @@
 import streamlit as st
 import sqlite3
 import hashlib
+import bcrypt
 
 DATABASE_PATH = "databases/login.sqlite"
 
@@ -53,7 +54,15 @@ def verificar_login(username, senha):
     cursor.execute(
         "SELECT senha FROM usuarios WHERE username = ?", (username,))
     user = cursor.fetchone()
+
     conn.close()
 
-    # Verifica se o usuário existe e se a senha informada bate com o hash armazenado
-    return user is not None and user[1] == hash_senha(senha)
+    # Se o usuário não existir, retorna False
+    if user is None:
+        return False
+
+    # Obtém o hash armazenado
+    hash_armazenado = user[0]
+
+    # Verifica a senha utilizando bcrypt
+    return bcrypt.checkpw(senha.encode('utf-8'), hash_armazenado.encode('utf-8'))
