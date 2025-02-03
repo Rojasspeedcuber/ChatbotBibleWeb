@@ -1,9 +1,5 @@
 import requests
-import os
 from decouple import config
-
-
-DATABASE_PATH = "databases/usuarios.sqlite"
 
 
 def criar_pagamento():
@@ -16,7 +12,6 @@ def criar_pagamento():
     payload = {
         "transaction_amount": 45,
         "description": "Acesso ao aplicativo",
-        "payment_method_id": "pix",
     }
     response = requests.post(url, json=payload, headers=headers)
 
