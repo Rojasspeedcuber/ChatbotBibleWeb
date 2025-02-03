@@ -18,7 +18,6 @@ def criar_cupom():
         "percent_off": 25,
         "total_coupon_limit": 5,
         "payment_methods": [
-            {"type": "debit_card"},
             {"type": "pix"}
         ]
     }
