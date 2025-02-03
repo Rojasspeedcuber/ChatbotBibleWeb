@@ -2,7 +2,8 @@ import requests
 from decouple import config
 
 
-def criar_pagamento():
+def criar_pagamento_checkout_pro():
+    """Cria uma preferência de pagamento no Mercado Pago com Checkout Pro."""
     url = "https://api.mercadopago.com/checkout/preferences"
     headers = {
         "Authorization": f"Bearer {config('ACCESS_TOKEN')}",
@@ -18,11 +19,17 @@ def criar_pagamento():
                 "currency_id": "BRL"
             }
         ],
+        "back_urls": {
+            # URL para quando o pagamento for bem-sucedido
+            "success": "https://www.suaurl.com/sucesso",
+            "failure": "https://www.suaurl.com/erro",  # URL para quando o pagamento falhar
+            # URL para quando o pagamento estiver pendente
+            "pending": "https://www.suaurl.com/pendente"
+        },
         "auto_return": "approved",  # Redireciona automaticamente após o pagamento ser aprovado
         "payment_methods": {
             "excluded_payment_types": [
-                # Se não quiser permitir boletos, exclua o tipo "ticket"
-                {"id": "ticket"}
+                {"id": "ticket"}  # Excluir boletos, por exemplo
             ],
             # Número de parcelas (1 significa pagamento à vista)
             "installments": 1
@@ -38,7 +45,12 @@ def criar_pagamento():
         # Retorna a URL do Checkout Pro para redirecionar o usuário
         return preference["init_point"]
     else:
-        # Em caso de erro, exibe os detalhes da resposta para depuração
+        # Exibe os detalhes da resposta para depuração
         print(f"Erro ao criar pagamento: {response.status_code}")
-        print(f"Detalhes do erro: {response.text}")
+        try:
+            erro = response.json()  # Tenta capturar a resposta como JSON para analisar o erro
+            print(f"Detalhes do erro: {erro}")
+        except ValueError:
+            print("Não foi possível decodificar a resposta como JSON.")
+            print(f"Detalhes da resposta: {response.text}")
         return None
