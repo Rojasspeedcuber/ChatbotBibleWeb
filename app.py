@@ -8,39 +8,14 @@ from langchain.agents import create_react_agent, AgentExecutor
 from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
-from payments.page import exibir_link_pagamento
-from payments.service import ACCESS_TOKEN
+from payments.page import exibir_interface_pagamento
+from payments.service import verificar_assinatura
 
 st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
 
 
 # 🔹 Configurando API Key do OpenAI para o Chatbot
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
-
-# Função que exibe a interface de pagamento
-
-
-def exibir_interface_pagamento():
-    st.header("Pagamento pendente, pague para acessar o Chatbot Gênesis")
-    st.write("Por favor, complete o pagamento para continuar.")
-    # Exibe o link para o pagamento
-    exibir_link_pagamento()
-
-
-def verificar_pagamento(preference_id):
-    # Configura a chave de acesso do Mercado Pago
-    # A chave de acesso do Mercado Pago
-    mp = mercadopago.SDK(ACCESS_TOKEN)
-
-    # Verifica o status do pagamento utilizando o ID da preferência
-    preference = mp.payment().get(preference_id)
-
-    # O status de pagamento pode ser "approved", "pending", "rejected", etc.
-    if preference['response']['status'] == 'approved':
-        return True  # Pagamento aprovado
-    else:
-        return False  # Pagamento não aprovado
-
 
 # Função principal para o chatbot bíblico
 
@@ -51,7 +26,7 @@ def main():
     # ID da preferência do pagamento, normalmente vindo de uma transação
     preference_id = st.session_state.get('preference_id')
 
-    if not preference_id or not verificar_pagamento(preference_id):
+    if not preference_id or not verificar_assinatura(preference_id):
         # Se o pagamento não foi confirmado, exibe a interface de pagamento
         exibir_interface_pagamento()
         return  # Não executa o restante do código

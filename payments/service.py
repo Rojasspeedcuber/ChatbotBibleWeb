@@ -4,9 +4,10 @@ from decouple import config
 ACCESS_TOKEN = config('ACCESS_TOKEN')
 
 
-def criar_cupom():
-    """Cria um cupom de desconto no Mercado Pago."""
-    url = "https://api.mercadopago.com/v1/campaigns"
+def criar_assinatura(email):
+    """Cria uma assinatura no Mercado Pago com duração de 4 meses."""
+
+    url = "https://api.mercadopago.com/preapproval"
 
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
@@ -14,75 +15,47 @@ def criar_cupom():
     }
 
     payload = {
-        "name": "OIKOS",
-        "percent_off": 25,
-        "total_coupon_limit": 5,
+        "reason": "Assinatura do Chatbot Gênesis",
+        "auto_recurring": {
+            "frequency": 4,  # 4 meses
+            "frequency_type": "months",
+            "transaction_amount": 30.00,  # Valor da assinatura
+            "currency_id": "BRL",
+        },
+        "payer_email": email,  # E-mail do assinante
+        "back_url": "https://chatbotgenesisweb.streamlit.app/",
+        "status": "pending"
     }
 
     response = requests.post(url, json=payload, headers=headers)
 
     if response.status_code == 201:
-        print("Cupom criado com sucesso!")
-        return response.json()
+        assinatura = response.json()
+        return assinatura.get("init_point")  # Link para o usuário assinar
     else:
-        print(f"Erro ao criar cupom: {response.status_code}")
+        print(f"Erro ao criar assinatura: {response.status_code}")
         print(response.json())
         return None
 
 
-def criar_pagamento_checkout_pro():
-    criar_cupom()
-    """Cria uma preferência de pagamento no Mercado Pago com Checkout Pro usando um token fixo."""
+def verificar_assinatura(preapproval_id):
+    """Verifica se a assinatura do usuário ainda está ativa."""
 
-    url = "https://api.mercadopago.com/checkout/preferences"
+    url = f"https://api.mercadopago.com/preapproval/{preapproval_id}"
 
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
 
-    payload = {
-        "items": [
-            {
-                "title": "Chatbot Gênesis",
-                "quantity": 1,
-                "unit_price": 60.00,
-                "currency_id": "BRL"
-            }
-        ],
-        "back_urls": {
-            # URL para quando o pagamento for bem-sucedido
-            "success": "auto_return",
-            "failure": "auto_return",  # URL para quando o pagamento falhar
-            # URL para quando o pagamento estiver pendente
-            "pending": "auto_return"
-        },
-        "auto_return": "all",  # Redireciona automaticamente após o pagamento ser aprovado
-        "payment_methods": {
-            "default_payment_method_id": "pix",
-            "excluded_payment_types": [
-                {"id": "ticket"}  # Excluir boletos, por exemplo
-            ],
-            # Número de parcelas (1 significa pagamento à vista)
-            "installments": 1
-        }
-    }
+    response = requests.get(url, headers=headers)
 
-    # Envia a requisição POST para criar a preferência de pagamento
-    response = requests.post(url, json=payload, headers=headers)
+    if response.status_code == 200:
+        assinatura = response.json()
+        status = assinatura.get("status")
 
-    # Verifica se a requisição foi bem-sucedida
-    if response.status_code == 201:
-        preference = response.json()
-        # Retorna a URL do Checkout Pro para redirecionar o usuário
-        return preference["init_point"]
+        # Se a assinatura estiver ativa, permitir o acesso
+        return status in ["authorized", "paused"]
     else:
-        # Exibe os detalhes da resposta para depuração
-        print(f"Erro ao criar pagamento: {response.status_code}")
-        try:
-            erro = response.json()  # Tenta capturar a resposta como JSON para analisar o erro
-            print(f"Detalhes do erro: {erro}")
-        except ValueError:
-            print("Não foi possível decodificar a resposta como JSON.")
-            print(f"Detalhes da resposta: {response.text}")
-        return None
+        print(f"Erro ao verificar assinatura: {response.status_code}")
+        return False
