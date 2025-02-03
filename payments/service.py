@@ -4,6 +4,36 @@ from decouple import config
 ACCESS_TOKEN = config('ACCESS_TOKEN')
 
 
+def criar_cupom():
+    """Cria um cupom de desconto no Mercado Pago."""
+    url = "https://api.mercadopago.com/v1/campaigns"
+
+    headers = {
+        "Authorization": f"Bearer {ACCESS_TOKEN}",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "name": "OIKOS",
+        "percent_off": 25,
+        "total_coupon_limit": 5,
+        "payment_methods": [
+            {"type": "debit_card"},
+            {"type": "pix"}
+        ]
+    }
+
+    response = requests.post(url, json=payload, headers=headers)
+
+    if response.status_code == 201:
+        print("Cupom criado com sucesso!")
+        return response.json()
+    else:
+        print(f"Erro ao criar cupom: {response.status_code}")
+        print(response.json())
+        return None
+
+
 def criar_pagamento_checkout_pro():
     """Cria uma preferência de pagamento no Mercado Pago com Checkout Pro usando um token fixo."""
 
@@ -58,3 +88,6 @@ def criar_pagamento_checkout_pro():
             print("Não foi possível decodificar a resposta como JSON.")
             print(f"Detalhes da resposta: {response.text}")
         return None
+
+
+criar_cupom()
