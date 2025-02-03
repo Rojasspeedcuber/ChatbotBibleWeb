@@ -25,12 +25,12 @@ def criar_pagamento_checkout_pro():
         ],
         "back_urls": {
             # URL para quando o pagamento for bem-sucedido
-            "success": "https://www.suaurl.com/sucesso",
-            "failure": "https://www.suaurl.com/erro",  # URL para quando o pagamento falhar
+            "success": "auto_return",
+            "failure": "auto_return",  # URL para quando o pagamento falhar
             # URL para quando o pagamento estiver pendente
-            "pending": "https://www.suaurl.com/pendente"
+            "pending": "auto_return"
         },
-        "auto_return": "approved",  # Redireciona automaticamente após o pagamento ser aprovado
+        "auto_return": "all",  # Redireciona automaticamente após o pagamento ser aprovado
         "payment_methods": {
             "excluded_payment_types": [
                 {"id": "ticket"}  # Excluir boletos, por exemplo
