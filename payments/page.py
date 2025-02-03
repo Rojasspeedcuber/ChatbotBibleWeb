@@ -9,4 +9,7 @@ import streamlit as st
 def exibir_link_pagamento():
     pagamento_url = criar_pagamento_checkout_pro()
 
-    st.markdown(f"[Clique aqui para pagar]({pagamento_url})")
+    if pagamento_url:
+        st.markdown(f"[Clique aqui para pagar]({pagamento_url})")
+    else:
+        st.error("Erro ao gerar pagamento.")
