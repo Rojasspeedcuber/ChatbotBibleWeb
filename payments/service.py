@@ -14,10 +14,6 @@ def criar_pagamento():
         "description": "Acesso ao aplicativo",  # Descrição do pagamento
         # Método de pagamento, como "pix", "credit_card", etc.
         "payment_method_id": "pix",
-        "payer": {
-            # E-mail do pagador (pode ser omitido se você não souber)
-            "email": "exemplo@dominio.com"
-        }
     }
 
     # Envia a requisição POST para criar o pagamento
