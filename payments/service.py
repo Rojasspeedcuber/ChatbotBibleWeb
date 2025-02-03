@@ -10,8 +10,10 @@ def criar_pagamento():
         "Content-Type": "application/json"
     }
     payload = {
-        "transaction_amount": 45,
-        "description": "Acesso ao aplicativo",
+        "title": "Chatbot Gênesis",
+        "currency_id": "BRL",
+        "quantity": 1,
+        "unit_price": 45
     }
     response = requests.post(url, json=payload, headers=headers)
 
