@@ -63,4 +63,4 @@ def verificar_login(username, senha):
         return False
 
         # Compara o hash SHA-256
-    return user[0] == hash_senha_sha256(senha)
+    return user[1] == hash_senha_sha256(senha)
