@@ -25,6 +25,13 @@ def criar_pagamento_checkout_pro():
                 "currency_id": "BRL"
             }
         ],
+        "back_urls": {
+            # URL para quando o pagamento for bem-sucedido
+            "success": "https://www.suaurl.com/sucesso",
+            "failure": "https://www.suaurl.com/erro",  # URL para quando o pagamento falhar
+            # URL para quando o pagamento estiver pendente
+            "pending": "https://www.suaurl.com/pendente"
+        },
         "auto_return": "approved",  # Redireciona automaticamente após o pagamento ser aprovado
         "payment_methods": {
             "excluded_payment_types": [
