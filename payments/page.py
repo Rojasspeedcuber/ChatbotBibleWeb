@@ -1,5 +1,5 @@
 import streamlit as st
-from payments.service import criar_pagamento
+from payments.service import criar_pagamento_checkout_pro
 
 
 def verificar_pagamento():
@@ -7,7 +7,7 @@ def verificar_pagamento():
     st.warning("Pagamento necessário para acessar o app.")
 
     if st.button("Realizar Pagamento"):
-        pagamento_url = criar_pagamento()
+        pagamento_url = criar_pagamento_checkout_pro()
         if pagamento_url:
             st.markdown(f"[Clique aqui para pagar]({pagamento_url})")
         else:
