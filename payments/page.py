@@ -9,7 +9,7 @@ def verificar_pagamento():
     if st.button("Realizar Pagamento"):
         pagamento_url = criar_pagamento_checkout_pro()
         if pagamento_url:
-            st.markdown(f"[Clique aqui para pagar]({pagamento_url})")
+            st.page_link(f"[Clique aqui para pagar]({pagamento_url})")
         else:
             st.error("Erro ao gerar pagamento.")
 
