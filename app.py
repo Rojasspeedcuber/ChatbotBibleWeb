@@ -9,12 +9,6 @@ from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from payments.page import verificar_pagamento
 
-# Configuração da página principal do Streamlit
-st.set_page_config(
-    page_title="Sistema de Pagamentos", layout="centered")
-
-# 🔹 Verificando Pagamento
-verificar_pagamento()
 
 # 🔹 Configurando API Key do OpenAI para o Chatbot
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
@@ -22,7 +16,7 @@ os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 def main():
     """Executa a lógica principal do Chatbot Bíblico."""
-
+    verificar_pagamento()
     # 🔹 Configuração da interface do Chatbot
     st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
     st.header('Chatbot Gênesis')
