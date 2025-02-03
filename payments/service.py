@@ -21,7 +21,7 @@ def criar_pagamento_checkout_pro():
             {
                 "title": "Chatbot Gênesis",
                 "quantity": 1,
-                "unit_price": 60.00,
+                "unit_price": 45.00,
                 "currency_id": "BRL"
             }
         ],
