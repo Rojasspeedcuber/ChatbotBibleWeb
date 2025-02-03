@@ -7,10 +7,10 @@ def exibir_interface_pagamento():
     st.write(
         "Para continuar usando o Chatbot Gênesis, assine por apenas R$30,00 por 4 meses.")
 
-    st.text_input("Email")
+    email = st.text_input("Email")
     if st.button("Continuar"):
         # Gera o link para a assinatura
-        link_pagamento = criar_assinatura()
+        link_pagamento = criar_assinatura(email)
         if link_pagamento:
             st.markdown(
                 f"[Clique aqui para realizar ou renovar sua assinatura]({link_pagamento})")
