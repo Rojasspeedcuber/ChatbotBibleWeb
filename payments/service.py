@@ -61,6 +61,7 @@ def criar_pagamento_checkout_pro():
         },
         "auto_return": "all",  # Redireciona automaticamente após o pagamento ser aprovado
         "payment_methods": {
+            "default_payment_method_id": "pix",
             "excluded_payment_types": [
                 {"id": "ticket"}  # Excluir boletos, por exemplo
             ],
