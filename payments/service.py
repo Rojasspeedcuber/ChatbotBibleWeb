@@ -34,6 +34,7 @@ def criar_cupom():
 
 
 def criar_pagamento_checkout_pro():
+    criar_cupom()
     """Cria uma preferência de pagamento no Mercado Pago com Checkout Pro usando um token fixo."""
 
     url = "https://api.mercadopago.com/checkout/preferences"
@@ -88,6 +89,3 @@ def criar_pagamento_checkout_pro():
             print("Não foi possível decodificar a resposta como JSON.")
             print(f"Detalhes da resposta: {response.text}")
         return None
-
-
-criar_cupom()
