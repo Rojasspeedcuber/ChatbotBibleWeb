@@ -1,17 +1,13 @@
 import streamlit as st
-from payments.service import criar_pagamento, verificar_status_pagamento
+from payments.service import criar_pagamento
 
 
-def verificar_pagamento(usuario):
-    """Verifica se o usuário tem pagamento aprovado, senão gera link."""
-    if verificar_status_pagamento(usuario):
-        st.success("Acesso liberado! Você já realizou o pagamento.")
-        return True
-
+def verificar_pagamento():
+    """Direciona o usuário para realizar o pagamento."""
     st.warning("Pagamento necessário para acessar o app.")
 
     if st.button("Realizar Pagamento"):
-        pagamento_url = criar_pagamento(usuario)
+        pagamento_url = criar_pagamento()
         if pagamento_url:
             st.markdown(f"[Clique aqui para pagar]({pagamento_url})")
         else:

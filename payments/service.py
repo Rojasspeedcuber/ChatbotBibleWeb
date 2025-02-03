@@ -25,35 +25,5 @@ def criar_pagamento(usuario, valor=45):
 
     if response.status_code == 201:
         pagamento = response.json()
-        salvar_pagamento(usuario, pagamento["id"], pagamento["status"])
         return pagamento["point_of_interaction"]["transaction_data"]["ticket_url"]
     return None
-
-
-def salvar_pagamento(usuario, pagamento_id, status):
-    """Salva o status do pagamento no banco de dados."""
-    conn = sqlite3.connect(DATABASE_PATH)
-    cursor = conn.cursor()
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS pagamentos (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            usuario TEXT,
-            pagamento_id TEXT,
-            status TEXT
-        )
-    """)
-    cursor.execute("INSERT INTO pagamentos (usuario, pagamento_id, status) VALUES (?, ?, ?)",
-                   (usuario, pagamento_id, status))
-    conn.commit()
-    conn.close()
-
-
-def verificar_status_pagamento(usuario):
-    """Verifica no banco de dados se o usuário já pagou."""
-    conn = sqlite3.connect(DATABASE_PATH)
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT status FROM pagamentos WHERE usuario = ? ORDER BY id DESC LIMIT 1", (usuario,))
-    status = cursor.fetchone()
-    conn.close()
-    return status and status[0] == "approved"

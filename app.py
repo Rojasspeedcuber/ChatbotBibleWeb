@@ -14,7 +14,7 @@ st.set_page_config(
     page_title="Sistema de Pagamentos", layout="centered")
 
 # 🔹 Verificando Pagamento
-usuario = verificar_pagamento()
+verificar_pagamento()
 
 # 🔹 Configurando API Key do OpenAI para o Chatbot
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
