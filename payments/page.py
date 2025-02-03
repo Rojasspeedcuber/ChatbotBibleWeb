@@ -3,7 +3,7 @@ from payments.service import criar_assinatura
 
 
 def exibir_interface_pagamento():
-    st.header("Assinatura não realizada ou expirada! Renove para continuar.")
+    st.header("Assinatura não realizada ou expirada! Assine para continuar.")
     st.write(
         "Para continuar usando o Chatbot Gênesis, assine por apenas R$30,00 por 4 meses.")
 
