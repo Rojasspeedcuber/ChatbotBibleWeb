@@ -86,8 +86,7 @@ def main():
     user_question = st.chat_input('O que deseja saber sobre a Bíblia?')
 
     # 🔹 Configuração do modelo e banco de dados
-    model = ChatOpenAI(model=selected_box,
-                       max_completion_tokens=1000, streaming=True)
+    model = ChatOpenAI(model=selected_box, streaming=True)
 
     try:
         db = SQLDatabase.from_uri(f'sqlite:///databases/{selected_bible}.db')
