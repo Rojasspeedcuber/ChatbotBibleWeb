@@ -21,7 +21,7 @@ os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
 
 
 def exibir_interface_pagamento():
-    st.header("Pagamento Pendentes")
+    st.header("Pagamento pendente, pague para acessar o Chatbot Gênesis")
     st.write("Por favor, complete o pagamento para continuar.")
     # Exibe o link para o pagamento
     exibir_link_pagamento()
