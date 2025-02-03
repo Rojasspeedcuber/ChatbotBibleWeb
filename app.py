@@ -8,17 +8,38 @@ from langchain.prompts import PromptTemplate
 from langchain_community.utilities.sql_database import SQLDatabase
 from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from payments.page import exibir_link_pagamento
+from payments.service import verificar_pagamento
 
 st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
 
-exibir_link_pagamento()
+
 # 🔹 Configurando API Key do OpenAI para o Chatbot
 os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
+
+# Função que exibe a interface de pagamento
+
+
+def exibir_interface_pagamento():
+    st.header("Pagamento Pendentes")
+    st.write("Por favor, complete o pagamento para continuar.")
+    # Exibe o link para o pagamento
+    exibir_link_pagamento()
+
+# Função principal para o chatbot bíblico
 
 
 def main():
     """Executa a lógica principal do Chatbot Bíblico."""
-    # 🔹 Configuração da interface do Chatbot
+
+    # ID da preferência do pagamento, normalmente vindo de uma transação
+    preference_id = st.session_state.get('preference_id')
+
+    if not preference_id or not verificar_pagamento(preference_id):
+        # Se o pagamento não foi confirmado, exibe a interface de pagamento
+        exibir_interface_pagamento()
+        return  # Não executa o restante do código
+
+    # 🔹 Se o pagamento foi confirmado, exibe a interface do chatbot
     st.header('Chatbot Gênesis')
 
     # 🔹 Modelos disponíveis para o Chatbot

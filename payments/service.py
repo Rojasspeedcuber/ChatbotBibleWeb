@@ -1,3 +1,4 @@
+import mercadopago
 import requests
 import streamlit as st
 from decouple import config
@@ -59,3 +60,18 @@ def criar_pagamento_checkout_pro():
             print("Não foi possível decodificar a resposta como JSON.")
             print(f"Detalhes da resposta: {response.text}")
         return None
+
+
+def verificar_pagamento(preference_id):
+    # Configura a chave de acesso do Mercado Pago
+    # A chave de acesso do Mercado Pago
+    mp = mercadopago.SDK(ACCESS_TOKEN)
+
+    # Verifica o status do pagamento utilizando o ID da preferência
+    preference = mp.payment().get(preference_id)
+
+    # O status de pagamento pode ser "approved", "pending", "rejected", etc.
+    if preference['response']['status'] == 'approved':
+        return True  # Pagamento aprovado
+    else:
+        return False  # Pagamento não aprovado
