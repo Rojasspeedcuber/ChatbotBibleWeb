@@ -45,24 +45,22 @@ def cadastrar_usuario(username, senha):
         conn.close()
 
 
+def hash_senha_sha256(senha):
+    return hashlib.sha256(senha.encode()).hexdigest()
+
+
 def verificar_login(username, senha):
     """Verifica se o login é válido."""
     conn = sqlite3.connect(DATABASE_PATH)
     cursor = conn.cursor()
 
-    # Busca a senha criptografada do usuário no banco de dados
     cursor.execute(
         "SELECT senha FROM usuarios WHERE username = ?", (username,))
     user = cursor.fetchone()
-
     conn.close()
 
-    # Se o usuário não existir, retorna False
     if user is None:
         return False
 
-    # Obtém o hash armazenado
-    hash_armazenado = user[0]
-
-    # Verifica a senha utilizando bcrypt
-    return bcrypt.checkpw(senha.encode('utf-8'), hash_armazenado.encode('utf-8'))
+        # Compara o hash SHA-256
+    return user[0] == hash_senha_sha256(senha)
