@@ -64,7 +64,8 @@ def main():
     model = ChatOpenAI(model=selected_box, streaming=True)
 
     try:
-        db = SQLDatabase.from_uri(f'sqlite:///databases/{selected_bible}.db')
+        db = SQLDatabase.from_uri(
+            f'sqlite:///databases/{selected_bible}.sqlite')
     except Exception as e:
         st.error(f"Erro ao conectar ao banco de dados: {e}")
         return
