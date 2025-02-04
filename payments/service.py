@@ -17,9 +17,9 @@ def criar_assinatura(email):
     payload = {
         "reason": "Assinatura do Chatbot Gênesis",
         "auto_recurring": {
-            "frequency": 4,  # 4 meses
+            "frequency": 12,  # 4 meses
             "frequency_type": "months",
-            "transaction_amount": 30.00,  # Valor da assinatura
+            "transaction_amount": 5.00,  # Valor da assinatura
             "currency_id": "BRL",
         },
         "payer_email": email,  # E-mail do assinante
