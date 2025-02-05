@@ -25,7 +25,7 @@ def criar_assinatura(email):
         },
         "payer_email": email,  # E-mail do assinante
         "back_url": "https://chatbotgenesisweb.streamlit.app/",
-        "status": "pending"
+        "status": "preapproval"
     }
 
     response = requests.post(url, json=payload, headers=headers)
