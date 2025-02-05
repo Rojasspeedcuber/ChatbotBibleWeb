@@ -2,6 +2,7 @@ import os
 import streamlit as st
 import mercadopago
 from fastapi import FastAPI, Request, BackgroundTasks
+from fastapi.responses import JSONResponse
 import requests
 import threading
 import uvicorn
@@ -16,25 +17,27 @@ from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from payments.page import exibir_interface_pagamento
 from payments.service import verificar_assinatura
 
-st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
-
 # 🔹 Configuração do Logging
 logging.basicConfig(filename="webhook.log", level=logging.INFO,
                     format="%(asctime)s - %(message)s")
 
-# 🔹 Configuração da API FastAPI para Webhooks
+# 🔹 Configuração do Streamlit
+st.set_page_config(page_title='Bible AI', page_icon='📖')
+
+# 🔹 Inicialização do FastAPI para Webhooks
 app = FastAPI()
 
-# 🔹 Configuração do Mercado Pago
-ACCESS_TOKEN = config('MERCADO_PAGO_ACCESS_TOKEN')
+# 🔹 Token de acesso do Mercado Pago
+ACCESS_TOKEN = config('ACCESS_TOKEN')
 
-# 🔹 Lista para armazenar eventos de Webhooks no Streamlit
+# 🔹 Armazena eventos do Webhook no Streamlit
 if "webhook_events" not in st.session_state:
     st.session_state["webhook_events"] = []
 
+# 🔹 Função para consultar detalhes do pagamento no Mercado Pago
+
 
 def consultar_pagamento(payment_id):
-    """Consulta detalhes do pagamento no Mercado Pago."""
     url = f"https://api.mercadopago.com/v1/payments/{payment_id}"
     headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
     response = requests.get(url, headers=headers)
@@ -47,10 +50,11 @@ def consultar_pagamento(payment_id):
         logging.error(
             f"Erro ao consultar pagamento {payment_id}: {response.text}")
 
+# 🔹 Rota do Webhook do Mercado Pago
+
 
 @app.post("/webhook")
 async def webhook(request: Request, background_tasks: BackgroundTasks):
-    """Recebe notificações do Mercado Pago e processa os eventos."""
     data = await request.json()
     logging.info(f"Webhook recebido: {data}")
 
@@ -60,16 +64,16 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
         st.session_state["webhook_events"].append(
             {"status": "Recebido", "id": payment_id})
 
-        # Processa o pagamento em background
+        # Processa o pagamento em segundo plano
         background_tasks.add_task(consultar_pagamento, payment_id)
 
-    return {"status": "ok"}
+    return JSONResponse(content={"status": "ok"}, status_code=200)
 
-# 🔹 Iniciar o servidor FastAPI em uma thread separada
+# 🔹 Iniciar FastAPI em uma thread separada
 
 
 def start_api():
-    uvicorn.run(app, host="0.0.0.0", port=8501)
+    uvicorn.run(app, host="0.0.0.0", port=5000)
 
 
 thread = threading.Thread(target=start_api, daemon=True)
@@ -79,8 +83,6 @@ thread.start()
 
 
 def main():
-    """Executa a lógica principal do Chatbot Bíblico."""
-
     preference_id = st.session_state.get('preapproval_id')
 
     if not preference_id or not verificar_assinatura(preference_id):
@@ -94,14 +96,13 @@ def main():
                      'KJA', 'NAA', 'NTLH', 'NVI', 'NVT']
 
     selected_box = st.sidebar.selectbox(
-        label='Selecione o modelo LLM', options=model_options)
+        'Selecione o modelo LLM', model_options)
     selected_bible = st.sidebar.selectbox(
-        label='Selecione a versão da base de dados', options=bible_options)
+        'Selecione a versão da base de dados', bible_options)
 
     st.sidebar.markdown("### Sobre")
     st.sidebar.markdown(
-        "Sou o ChatBot Gênesis. Fui criado pela inspiração de Deus na vida de um estudante de Ciência da Computação. "
-        "Utilizo Inteligência Artificial para ajudá-lo a conhecer os ensinamentos bíblicos."
+        "Sou o ChatBot Gênesis. Criado para ajudá-lo a conhecer os ensinamentos bíblicos."
     )
 
     st.write("Faça perguntas sobre a Bíblia")
@@ -130,14 +131,9 @@ def main():
         agent=agent, tools=toolkit.get_tools(), handle_parsing_errors=True)
 
     prompt = """
-        Você é um chatbot especializado na Bíblia Sagrada, capaz de responder perguntas sobre seu conteúdo, 
-        interpretação e contexto histórico, cultural e espiritual.
-        Seu objetivo é fornecer respostas claras, precisas e baseadas nas escrituras, respeitando todas as tradições cristãs.
-        Responda de forma natural, agradável e respeitosa. Seja objetivo nas respostas, com 
-        informações claras e diretas. Foque em ser natural e humanizado, como um diálogo comum.
-        Use como base a Bíblia Sagrada disponibilizada no banco de dados.
+        Você é um chatbot especializado na Bíblia Sagrada. 
+        Seu objetivo é fornecer respostas claras, precisas e baseadas nas escrituras.
         Sempre use os versículos contidos na base de dados para responder as perguntas.
-        A resposta final deve ter uma formatação amigável (markdown) para visualização do usuário.
         Responda sempre em português brasileiro.
         Pergunta: {q}
     """
@@ -156,7 +152,7 @@ def main():
             output = agent_executor.invoke({'input': formatted_prompt})
             st.markdown(output.get('output'))
 
-    # 🔹 Seção para exibir Webhooks recebidos
+    # 🔹 Exibir eventos do Webhook recebidos
     st.subheader("📋 Eventos Recebidos do Mercado Pago")
     for event in st.session_state["webhook_events"]:
         st.json(event)
