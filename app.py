@@ -24,7 +24,7 @@ def main():
     """Executa a lógica principal do Chatbot Bíblico."""
 
     # ID da preferência do pagamento, normalmente vindo de uma transação
-    preference_id = st.session_state.get('preference_id')
+    preference_id = st.session_state.get('preapproval_id')
 
     if not preference_id or not verificar_assinatura(preference_id):
         # Se o pagamento não foi confirmado, exibe a interface de pagamento
