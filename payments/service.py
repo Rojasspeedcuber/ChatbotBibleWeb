@@ -1,3 +1,4 @@
+import requests  # Certifique-se de importar requests
 import requests
 from decouple import config
 
@@ -42,20 +43,29 @@ def verificar_assinatura(preapproval_id):
     """Verifica se a assinatura do usuário ainda está ativa."""
 
     url = f"https://api.mercadopago.com/preapproval/{preapproval_id}"
-
     headers = {
         "Authorization": f"Bearer {ACCESS_TOKEN}",
         "Content-Type": "application/json"
     }
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Lança erro em caso de falha HTTP
 
-    if response.status_code == 200:
         assinatura = response.json()
         status = assinatura.get("status")
 
-        # Se a assinatura estiver ativa, permitir o acesso
-        return status in ["authorized", "paused"]
-    else:
-        print(f"Erro ao verificar assinatura: {response.status_code}")
+        if status is None:
+            print("❌ Erro: Resposta inesperada da API do Mercado Pago.")
+            return False
+
+        if status == "authorized":
+            print("✅ Assinatura ativa.")
+            return True
+        else:
+            print(f"⚠️ Assinatura inativa. Status: {status}")
+            return False
+
+    except requests.exceptions.RequestException as e:
+        print(f"❌ Erro ao verificar assinatura: {e}")
         return False
