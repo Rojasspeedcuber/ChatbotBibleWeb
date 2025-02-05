@@ -1,6 +1,11 @@
 import os
 import streamlit as st
 import mercadopago
+from fastapi import FastAPI, Request, BackgroundTasks
+import requests
+import threading
+import uvicorn
+import logging
 from decouple import config
 from langchain import hub
 from langchain_openai import ChatOpenAI
@@ -13,28 +18,77 @@ from payments.service import verificar_assinatura
 
 st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
 
+# 🔹 Configuração do Logging
+logging.basicConfig(filename="webhook.log", level=logging.INFO,
+                    format="%(asctime)s - %(message)s")
 
-# 🔹 Configurando API Key do OpenAI para o Chatbot
-os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
+# 🔹 Configuração da API FastAPI para Webhooks
+app = FastAPI()
 
-# Função principal para o chatbot bíblico
+# 🔹 Configuração do Mercado Pago
+ACCESS_TOKEN = config('MERCADO_PAGO_ACCESS_TOKEN')
+
+# 🔹 Lista para armazenar eventos de Webhooks no Streamlit
+if "webhook_events" not in st.session_state:
+    st.session_state["webhook_events"] = []
+
+
+def consultar_pagamento(payment_id):
+    """Consulta detalhes do pagamento no Mercado Pago."""
+    url = f"https://api.mercadopago.com/v1/payments/{payment_id}"
+    headers = {"Authorization": f"Bearer {ACCESS_TOKEN}"}
+    response = requests.get(url, headers=headers)
+
+    if response.status_code == 200:
+        pagamento = response.json()
+        logging.info(f"Pagamento {payment_id} consultado: {pagamento}")
+        st.session_state["webhook_events"].append(pagamento)
+    else:
+        logging.error(
+            f"Erro ao consultar pagamento {payment_id}: {response.text}")
+
+
+@app.post("/webhook")
+async def webhook(request: Request, background_tasks: BackgroundTasks):
+    """Recebe notificações do Mercado Pago e processa os eventos."""
+    data = await request.json()
+    logging.info(f"Webhook recebido: {data}")
+
+    if data.get("action") == "payment.created":
+        payment_id = data["data"]["id"]
+        logging.info(f"Novo pagamento recebido: {payment_id}")
+        st.session_state["webhook_events"].append(
+            {"status": "Recebido", "id": payment_id})
+
+        # Processa o pagamento em background
+        background_tasks.add_task(consultar_pagamento, payment_id)
+
+    return {"status": "ok"}
+
+# 🔹 Iniciar o servidor FastAPI em uma thread separada
+
+
+def start_api():
+    uvicorn.run(app, host="0.0.0.0", port=8501)
+
+
+thread = threading.Thread(target=start_api, daemon=True)
+thread.start()
+
+# 🔹 Função principal do Chatbot Bíblico
 
 
 def main():
     """Executa a lógica principal do Chatbot Bíblico."""
 
-    # ID da preferência do pagamento, normalmente vindo de uma transação
     preference_id = st.session_state.get('preapproval_id')
 
     if not preference_id or not verificar_assinatura(preference_id):
-        # Se o pagamento não foi confirmado, exibe a interface de pagamento
         exibir_interface_pagamento()
-        return  # Não executa o restante do código
+        return
 
-    # 🔹 Se o pagamento foi confirmado, exibe a interface do chatbot
     st.header('Chatbot Gênesis')
 
-    # 🔹 Modelos disponíveis para o Chatbot
     model_options = ['gpt-4', 'gpt-4-turbo', 'gpt-4o-mini', 'gpt-4o']
     bible_options = ['ACF', 'ARA', 'ARC', 'AS21',
                      'KJA', 'NAA', 'NTLH', 'NVI', 'NVT']
@@ -44,7 +98,6 @@ def main():
     selected_bible = st.sidebar.selectbox(
         label='Selecione a versão da base de dados', options=bible_options)
 
-    # 🔹 Informações sobre o Chatbot
     st.sidebar.markdown("### Sobre")
     st.sidebar.markdown(
         "Sou o ChatBot Gênesis. Fui criado pela inspiração de Deus na vida de um estudante de Ciência da Computação. "
@@ -53,14 +106,11 @@ def main():
 
     st.write("Faça perguntas sobre a Bíblia")
 
-    # 🔹 Histórico de mensagens
     if 'messages' not in st.session_state:
         st.session_state['messages'] = []
 
-    # 🔹 Input do usuário
     user_question = st.chat_input('O que deseja saber sobre a Bíblia?')
 
-    # 🔹 Configuração do modelo e banco de dados
     model = ChatOpenAI(model=selected_box, streaming=True)
 
     try:
@@ -79,7 +129,6 @@ def main():
     agent_executor = AgentExecutor(
         agent=agent, tools=toolkit.get_tools(), handle_parsing_errors=True)
 
-    # 🔹 Template de prompt para o Chatbot
     prompt = """
         Você é um chatbot especializado na Bíblia Sagrada, capaz de responder perguntas sobre seu conteúdo, 
         interpretação e contexto histórico, cultural e espiritual.
@@ -94,7 +143,6 @@ def main():
     """
     prompt_template = PromptTemplate.from_template(prompt)
 
-    # 🔹 Se houver pergunta, processa a resposta
     if user_question:
         for message in st.session_state.messages:
             st.chat_message(message.get('role')).write(message.get('content'))
@@ -107,6 +155,11 @@ def main():
             formatted_prompt = prompt_template.format(q=user_question)
             output = agent_executor.invoke({'input': formatted_prompt})
             st.markdown(output.get('output'))
+
+    # 🔹 Seção para exibir Webhooks recebidos
+    st.subheader("📋 Eventos Recebidos do Mercado Pago")
+    for event in st.session_state["webhook_events"]:
+        st.json(event)
 
 
 # 🔹 Executando o aplicativo
