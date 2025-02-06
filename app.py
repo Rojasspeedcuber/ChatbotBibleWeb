@@ -17,6 +17,8 @@ from langchain_community.agent_toolkits.sql.toolkit import SQLDatabaseToolkit
 from payments.page import exibir_interface_pagamento
 from payments.service import verificar_assinatura
 
+os.environ['OPENAI_API_KEY'] = config('OPENAI_API_KEY')
+
 # 🔹 Configuração do Logging
 logging.basicConfig(filename="webhook.log", level=logging.INFO,
                     format="%(asctime)s - %(message)s")
