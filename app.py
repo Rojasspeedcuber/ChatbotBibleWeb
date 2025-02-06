@@ -22,7 +22,7 @@ logging.basicConfig(filename="webhook.log", level=logging.INFO,
                     format="%(asctime)s - %(message)s")
 
 # 🔹 Configuração do Streamlit
-st.set_page_config(page_title='Bible AI', page_icon='📖')
+st.set_page_config(page_title='Bible AI', page_icon='biblia.png')
 
 # 🔹 Inicialização do FastAPI para Webhooks
 app = FastAPI()

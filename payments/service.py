@@ -6,7 +6,7 @@ ACCESS_TOKEN = config('ACCESS_TOKEN')
 
 
 def criar_assinatura(email):
-    """Cria uma assinatura no Mercado Pago com duração de 4 meses."""
+    """Cria uma assinatura no Mercado Pago com duração de 12 meses."""
 
     url = "https://api.mercadopago.com/preapproval"
 
@@ -18,13 +18,13 @@ def criar_assinatura(email):
     payload = {
         "reason": "Assinatura do Chatbot Gênesis",
         "auto_recurring": {
-            "frequency": 12,  # 4 meses
+            "frequency": 12,  # 12 meses
             "frequency_type": "months",
             "transaction_amount": 5.00,  # Valor da assinatura
             "currency_id": "BRL",
         },
         "payer_email": email,  # E-mail do assinante
-        "back_url": "https://chatbotgenesisweb.streamlit.app/",
+        "back_url": "https://chatbotgenesisweb.rojasdev.site/",
         "status": "preapproval"
     }
 
