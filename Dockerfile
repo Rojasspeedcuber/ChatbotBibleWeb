@@ -12,5 +12,9 @@ COPY . .
 # Expõe a porta padrão do Streamlit
 EXPOSE 9000
 
+ENV STREAMLIT_SERVER_HEADLESS=true
+ENV STREAMLIT_SERVER_PORT=9000
+ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
+
 # Define o comando para iniciar o Streamlit
 CMD ["streamlit", "run", "app.py", "--server.port=9000", "--server.address=0.0.0.0"]
