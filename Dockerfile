@@ -17,4 +17,4 @@ ENV STREAMLIT_SERVER_PORT=9000
 ENV STREAMLIT_SERVER_ADDRESS=0.0.0.0
 
 # Define o comando para iniciar o Streamlit
-CMD ["streamlit", "run", "app.py", "--server.port=9000", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py"]
