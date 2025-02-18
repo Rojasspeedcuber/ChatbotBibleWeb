@@ -1,6 +1,5 @@
 import os
 import streamlit as st
-import mercadopago
 from fastapi import FastAPI, Request, BackgroundTasks
 from fastapi.responses import JSONResponse
 import requests
