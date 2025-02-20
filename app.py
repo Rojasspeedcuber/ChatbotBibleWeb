@@ -74,7 +74,7 @@ async def webhook(request: Request, background_tasks: BackgroundTasks):
 
 
 def start_api():
-    uvicorn.run(app, host="0.0.0.0", port=9000)
+    uvicorn.run(app, host="0.0.0.0", port=8501)
 
 
 thread = threading.Thread(target=start_api, daemon=True)
